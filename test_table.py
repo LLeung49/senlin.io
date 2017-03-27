@@ -1,6 +1,8 @@
 import boto3
 import uuid
 from boto3.dynamodb.conditions import Key, Attr
+import time
+from datetime import datetime
 
 # count #items in table
 dynamodb = boto3.resource('dynamodb')
@@ -63,10 +65,14 @@ cards_table = dynamodb.Table('Cards')
 
 # scan item by key
 response = cards_table.scan(
-    Select='SPECIFIC_ATTRIBUTES',
-    AttributesToGet=['Front', 'Back'],
-    Limit=2
-
 )
 items = response['Items']
-print(items)
+print(len(items))
+
+for item in items:
+    if 'correct' in item:
+        print('Timestamp')
+# # epoch to local time
+# print(type(time.time()))
+# print(datetime.fromtimestamp(time.time()).strftime('%c'))
+
