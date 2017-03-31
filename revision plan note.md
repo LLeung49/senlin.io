@@ -33,9 +33,13 @@ I(2):=6
 for n>2 I(n):=I(n-1)*EF
 
 Which means:
+
 --I(n) is the interval time of each revision schedule, base unit is day.
-​	I(n) 是每次单词复习出现的间隔时间,单位是天
+
+I(n) 是每次单词复习出现的间隔时间,单位是天
+
 --EF is called "Easiness Factor", according to the author, this value is between 1.3-2.5, EF for every new word is 2.5. Based on the process of the review, it need to be adjusted accordingly. EF will set to 1.3 if EF is less than 1.3 otherwise some troublesome repeating problem may occur.
+
 EF是作者自己命名的一个参数,叫做Easiness Factor 难易度因子,这个因子的范围,按照作者的设定介于1.3-2.5之间,任何新单词的默认EF是2.5,根据复习的进度,不断进行相应的调整.如果EF小于1.3的时候,则让EF=1.3否则会出现一些很讨厌的重复的问题,
 
 ## The adjustment of EF:

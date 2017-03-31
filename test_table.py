@@ -3,10 +3,13 @@ import uuid
 from boto3.dynamodb.conditions import Key, Attr
 import time
 from datetime import datetime
+import json
+from decimal import Decimal
 
 # count #items in table
 dynamodb = boto3.resource('dynamodb')
 cards_table = dynamodb.Table('Cards')
+memories_table = dynamodb.Table('Memories')
 # print(cards_table.item_count)
 
 # # count total # of items
@@ -36,12 +39,12 @@ cards_table = dynamodb.Table('Cards')
 
 
 
-# # query item by key
-# response = cards_table.query(
-#     KeyConditionExpression=Key('Card_id').eq('fa413c02-201a-4d9e-b1c4-fc32d98804d6')
-# )
-# items = response['Items']
-# print(items)
+# query item by key
+response = memories_table.query(
+    KeyConditionExpression=Key('Timestamp').eq(Decimal('1490744850.83')) & Key('User_id').eq('64b93d2e-138f-45f6-a118-66968cd62b20')
+)
+items = response['Items']
+print(items)
 #
 # # query item by Attribute is WRONG
 # response = cards_table.query(
@@ -63,15 +66,17 @@ cards_table = dynamodb.Table('Cards')
 #     }
 # )
 
-# scan item by key
-response = cards_table.scan(
-)
-items = response['Items']
-print(len(items))
+# # scan item by key
+# response = cards_table.scan(
+# )
+# items = response['Items']
+# print(len(items))
+#
+# for item in items:
+#     if 'correct' in item:
+#         print('Timestamp')
 
-for item in items:
-    if 'correct' in item:
-        print('Timestamp')
+
 # # epoch to local time
 # print(type(time.time()))
 # print(datetime.fromtimestamp(time.time()).strftime('%c'))

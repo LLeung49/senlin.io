@@ -1,0 +1,29 @@
+{u'Records': [
+	{
+		u'eventID': u'974f5ebc491013a0a99f426a6ab419b6', 
+		u'eventVersion': u'1.1', 
+		u'dynamodb': 
+		{
+			u'SequenceNumber': u'17309400000000001231789240', 
+			u'Keys': 
+				{	u'Timestamp': {u'N': u'1490898896.61'}, 
+					u'User_id': {u'S': u'64b93d2e-138f-45f6-a118-66968cd62b20'}
+				}, 
+			u'SizeBytes': 180, 
+			u'NewImage': 
+				{
+					u'Correct': {u'BOOL': True}, 
+					u'Timestamp': {u'N': u'1490898896.61'}, 
+					u'User_id': {u'S': u'64b93d2e-138f-45f6-a118-66968cd62b20'}, 
+					u'Card_id': {u'S': u'412b54d6-c0e0-44b4-acda-c6f7e5b6f93d'}, 
+					u'Timetaken': {u'N': u'7'}
+				}, 
+			u'ApproximateCreationDateTime': 1490898840.0, 
+			u'StreamViewType': u'NEW_IMAGE'
+		}, 
+		u'awsRegion': u'ap-southeast-1', 
+		u'eventName': u'INSERT', 
+		u'eventSourceARN': u'arn:aws:dynamodb:ap-southeast-1:933650509733:table/Memories/stream/2017-03-30T18:24:47.239', 
+		u'eventSource': u'aws:dynamodb'
+	}
+]}
