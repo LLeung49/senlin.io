@@ -29,11 +29,11 @@ all_cards = response['Items']
 # print('#Words: ', len(all_cards), ' Random word id: ',  all_cards[random.randint(0, 9)]['Card_id'], all_cards[random.randint(0, 9)]['Card_id'])
 
 
-for i in range(5):
+for i in range(1):
     memories_table.put_item(
         Item={
             'User_id': user_id,
-            'Card_id': all_cards[random.randint(0, 3)]['Card_id'],
+            'Card_id': all_cards[0]['Card_id'],
             'Timestamp': Decimal(time.time()).quantize(Decimal('0.00')),
             'Timetaken': int(random.randint(1, 9)),
             'Correct': True if random.random() > 0.5 else False,
