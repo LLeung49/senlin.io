@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible">
     <title>Welcome to Senlin</title>
     {% load staticfiles %}
+    <!-- Load website icon -->
     <link rel="icon" href="{% static 'img/icon.ico' %}"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="../../static/css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="../../static/css/style.css" rel="stylesheet">
 </head>
 <body>
-<h1>this is base template.</h1>
+<!--<h1>this is base template.</h1>-->
     {% block body %}
     {% endblock %}
 </body>
