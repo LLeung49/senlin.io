@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae0e30aa-be14-4e73-874d-cf01c6c6bf28" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/db.sqlite3" afterPath="$PROJECT_DIR$/senlin_website/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/.idea/workspace.xml" afterPath="$PROJECT_DIR$/senlin_website/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/senlin/templates/senlin/base.html" afterPath="$PROJECT_DIR$/senlin_website/senlin/templates/senlin/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/senlin/templates/senlin/home.html" afterPath="$PROJECT_DIR$/senlin_website/senlin/templates/senlin/home.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/senlin/views.py" afterPath="$PROJECT_DIR$/senlin_website/senlin/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/senlin_website/settings.py" afterPath="$PROJECT_DIR$/senlin_website/senlin_website/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/senlin_website/urls.py" afterPath="$PROJECT_DIR$/senlin_website/senlin_website/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/senlin_website/webpack.base.config.js" afterPath="$PROJECT_DIR$/senlin_website/webpack.base.config.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />

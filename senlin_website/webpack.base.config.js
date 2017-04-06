@@ -11,7 +11,7 @@ module.exports = {
   },
 
   output: {
-      path: path.resolve('./djreact/static/bundles/local/'),
+      path: path.resolve('./senlin/static/bundles/local/'),
       filename: "[name]-[hash].js"
   },
 

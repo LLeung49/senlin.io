@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = [u'127.0.0.1', u'django-env.tkufcxwkta.ap-southeast-1.elasticbeanstalk.com']
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/local/',  # end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-local.json'),
+    }
+}
 
 # Application definition
 
