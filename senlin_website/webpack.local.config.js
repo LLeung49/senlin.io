@@ -7,10 +7,10 @@ var ip = 'localhost'
 
 
 config.entry = {
-  App1: [
+  Senlin: [
     'webpack-dev-server/client?http://' + ip + ':3000',
     'webpack/hot/only-dev-server',
-    './reactjs/App1',
+    './reactjs/Senlin',
   ],
 }
 
