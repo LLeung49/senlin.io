@@ -62,7 +62,7 @@ export default class SampleAppContainer extends React.Component {
             <p style={[styles.counter]}>{counters.clicks}</p>
             <p>{process.env.BASE_API_URL}</p>
             {github.repos !== undefined &&
-                <GithubRepos repos={github.repos} />
+                <GithubRepos repos={github.repos} index={counters.clicks} />
             }
 
           </div>

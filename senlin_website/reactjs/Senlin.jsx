@@ -30,12 +30,14 @@ class Senlin extends React.Component {
     return (
         <div>
             <NavBarContainer />
-            <CardContainer />
+            <Provider store={store}>
+                <CardContainer />
+            </Provider>
             <FooterContainer />
-        <Provider store={store}>
+        {/*<Provider store={store}>*/}
 
-            <App1Container />
-        </Provider>
+            {/*<App1Container />*/}
+        {/*</Provider>*/}
             </div>
     )
   }
