@@ -1,5 +1,5 @@
 import React from "react"
-
+import image from '../../senlin/static/img/senlin1.png'
 import Headline from "../components/Headline"
 
 export default class NavBarContainer extends React.Component {
@@ -13,12 +13,12 @@ export default class NavBarContainer extends React.Component {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <a className="navbar-brand" href="#">
-                    <Headline>Senlin</Headline>
+                     <img src={image} height={50}  mode='fit'/>
                 </a>
                 <div className="collapse navbar-collapse" id="collapseEx2">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className="nav-link">Home <span className="sr-only">(current)</span></a>
+                            {/*<a className="nav-link">Home <span className="sr-only">(current)</span></a>*/}
                         </li>
 
 

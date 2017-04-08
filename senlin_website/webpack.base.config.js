@@ -23,7 +23,10 @@ module.exports = {
   ], // add all common plugins here
 
   module: {
-    loaders: [] // add all common loaders here
+    loaders: [{
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      loader: 'file'
+    }] // add all common loaders here
   },
 
   resolve: {
