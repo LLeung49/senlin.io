@@ -3,6 +3,7 @@ import Radium from "radium"
 import { connect } from "react-redux"
 import * as githubActions from "../actions/githubActions"
 import GithubRepos from "../components/GithubRepos"
+import CountdownTimer from "../components/CountdownTimer"
 
 import * as counterActions from "../actions/counterActions"
 
@@ -29,6 +30,7 @@ export default class CardContainer extends React.Component {
 
         this.state = {
           details: false,
+          timeSpend: 20,
         };
         this.showDetails=this.showDetails.bind(this);
   };
@@ -39,6 +41,9 @@ export default class CardContainer extends React.Component {
         this.setState({details: false})
     }
 
+    setTimeSpend(countValue){
+        this.setState({timeSpend: countValue})
+    }
     componentDidMount() {
       let {dispatch, github} = this.props
       if (!github.isLoadingRepos && github.repos === undefined) {
@@ -60,6 +65,7 @@ export default class CardContainer extends React.Component {
                 <div className="card"  style={{height: 600, position: 'relative'}}>
                     <div className="card-block text-center">
                         <h1 style={{fontSize: '120px'}}>请稍等</h1>
+
                         <a>
                             <div className="mask"></div>
                         </a>
@@ -75,6 +81,7 @@ export default class CardContainer extends React.Component {
 
 
           </div>
+
       )
     }
 
@@ -97,7 +104,8 @@ export default class CardContainer extends React.Component {
                     </div>
                     <hr className="extra-margins"/>
                     <div className="card-block text-center" style={[styles.cardBottomBlock]}>
-                        <h4 className="card-title" style={{fontSize: '30px'}}>/{github.repos[counters.clicks].Pronunciation}/</h4>
+                        <CountdownTimer  secondsRemaining="10" nextCard = {this.showDetails} setTime = {this.setTimeSpend.bind(this)}/>
+                        <h4 className="card-title" style={{fontSize: '30px'}}>{github.repos[counters.clicks].Pronunciation}</h4>
                         <p className="card-text" style={{fontSize: '20px'}}></p>
                         <a className="btn btn-warning btn-lg waves-effect waves-light" style={[styles.cardButton]}onClick={this.showDetails}>Show Details</a>
                     </div>
@@ -132,7 +140,8 @@ export default class CardContainer extends React.Component {
                     </div>
                     <hr className="extra-margins"/>
                     <div className="card-block text-center" style={[styles.cardBottomBlock]}>
-                        <h4 className="card-title" style={{fontSize: '30px'}}>/{github.repos[counters.clicks].Pronunciation}/</h4>
+                        <h4><span className="badge indigo">You spend {20 - this.state.timeSpend} seconds.</span></h4>
+                        <h4 className="card-title" style={{fontSize: '30px'}}>{github.repos[counters.clicks].Pronunciation}</h4>
                         <p className="card-text" style={{fontSize: '20px'}}>{github.repos[counters.clicks].Back}</p>
                         <button className="btn btn-default btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleClick()}>Correct</button>
                         <button className="btn btn-danger btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleClick()}>Wrong</button>
