@@ -49,7 +49,7 @@ def words(request):
             cards_table = dynamodb.Table('Cards')
             response = cards_table.scan(
                 Select='SPECIFIC_ATTRIBUTES',
-                AttributesToGet=['Back', 'Front', 'Pronunciation']
+                AttributesToGet=['Card_id', 'Back', 'Front', 'Pronunciation']
             )
             all_cards = response['Items']
             print(all_cards[0])

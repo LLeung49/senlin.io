@@ -6,6 +6,12 @@ import GithubRepos from "../components/GithubRepos"
 import CountdownTimer from "../components/CountdownTimer"
 
 import * as counterActions from "../actions/counterActions"
+// import * as localforage from "localforage"
+import * as loacalforage from "localforage"
+var localforage = require('../../node_modules/localforage/dist/localforage.js');
+var senlin_offline_db = localforage.createInstance({
+    name: "senlin_db"
+});
 
 
 const styles = {
@@ -51,7 +57,21 @@ export default class CardContainer extends React.Component {
       }
     }
 
-    handleClick() {
+    handleCorrect() {
+        var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
+        console.log(userid)
+
+
+        let {dispatch} = this.props;
+        dispatch(counterActions.increaseCounter())
+        this.nextCard()
+    }
+
+    handleWrong(){
+        var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
+        console.log(userid)
+
+
         let {dispatch} = this.props;
         dispatch(counterActions.increaseCounter())
         this.nextCard()
@@ -143,8 +163,8 @@ export default class CardContainer extends React.Component {
                         <h4><span className="badge indigo">You spend {20 - this.state.timeSpend} seconds.</span></h4>
                         <h4 className="card-title" style={{fontSize: '30px'}}>{github.repos[counters.clicks].Pronunciation}</h4>
                         <p className="card-text" style={{fontSize: '20px'}}>{github.repos[counters.clicks].Back}</p>
-                        <button className="btn btn-default btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleClick()}>Correct</button>
-                        <button className="btn btn-danger btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleClick()}>Wrong</button>
+                        <button className="btn btn-default btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleCorrect()}>Correct</button>
+                        <button className="btn btn-danger btn-lg waves-effect waves-light" style={[styles.cardButton]} onClick={() => this.handleWrong()}>Wrong</button>
                     </div>
                 </div>
             </div>
