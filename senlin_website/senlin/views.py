@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
+from django.http import Http404
+from decimal import Decimal
 
 
 
@@ -60,5 +62,31 @@ def words(request):
 
         jsondata = json.dumps(all_cards)
         return HttpResponse(jsondata, content_type="application/json")
+    else:
+        pass
+
+
+def insert_memories(request):
+    if request.method == 'POST':
+        dynamodb = boto3.resource('dynamodb')
+        memories_table = dynamodb.Table('Memories')
+
+        try:
+            # print(request.POST.get('data[cardId]'))
+            memories_table.put_item(
+                Item={
+                    'User_id': request.POST.get('data[userId]'),
+                    'Card_id': request.POST.get('data[cardId]'),
+                    'Timestamp': Decimal(request.POST.get('data[timeStamp]')),
+                    'Timetaken': request.POST.get('data[timeSpend]'),
+                    'Correct': request.POST.get('data[correct]'),
+                }
+            )
+            print('Added new memory.')
+
+        except KeyError:
+            return HttpResponse('Upload memories failed!')
+
+        return HttpResponse('Upload memories successfully!')
     else:
         pass

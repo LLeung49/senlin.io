@@ -12,7 +12,7 @@ config.plugins = config.plugins.concat([
   new webpack.DefinePlugin({
     'process.env': {
       'NODE_ENV': JSON.stringify('staging'),
-      'BASE_API_URL': JSON.stringify('https://sandbox.example.com/api/v1/'),
+      'BASE_API_URL': JSON.stringify('http://sandbox.example.com/'),
   }}),
 
   // keeps hashes consistent between compilations

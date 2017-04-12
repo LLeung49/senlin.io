@@ -4,13 +4,16 @@ import { connect } from "react-redux"
 import * as githubActions from "../actions/githubActions"
 import GithubRepos from "../components/GithubRepos"
 import CountdownTimer from "../components/CountdownTimer"
-
+import { request } from "../utils"
 import * as counterActions from "../actions/counterActions"
 // import * as localforage from "localforage"
 import * as loacalforage from "localforage"
 var localforage = require('../../node_modules/localforage/dist/localforage.js');
 var senlin_offline_db = localforage.createInstance({
     name: "senlin_db"
+});
+var senlin_async_db = localforage.createInstance({
+    name: "senlin_async"
 });
 
 
@@ -57,9 +60,52 @@ export default class CardContainer extends React.Component {
       }
     }
 
+
+
     handleCorrect() {
+        let {counters, github} =  this.props
         var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
+        var time_stamp = (Math.round(new Date()/10))/100
+        var time_spend = 20 - this.state.timeSpend
         console.log(userid)
+        console.log(github.repos[counters.clicks].Card_id)
+        console.log(time_stamp)
+        console.log(time_spend)
+
+        var data = {
+            timeStamp: time_stamp,
+            timeSpend: time_spend,
+            userId: userid,
+            correct: true,
+            cardId: github.repos[counters.clicks].Card_id,
+        }
+
+
+        $.ajax({
+            type: 'POST',
+                url: process.env.BASE_API_URL + 'api/new_memories/',
+                data: {
+                    data,
+                    csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
+                }
+            })
+            .done(function(data) {
+                console.log('---> UPLOAD SUCCESSFULLY')
+            })
+            .fail(function(jqXhr) {
+                console.log('failed to register');
+                console.log('---> UPLOAD FAILED.')
+                //add to local async storage
+            })
+            .always(function () {
+                // add to local memories storage
+
+
+
+            })  ;
+
+
+
 
 
         let {dispatch} = this.props;
@@ -68,9 +114,14 @@ export default class CardContainer extends React.Component {
     }
 
     handleWrong(){
+        let {counters, github} =  this.props
         var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
+        var time_stamp= (Math.round(new Date()/10))/100
+        var time_spend = 20 - this.state.timeSpend
         console.log(userid)
-
+        console.log(github.repos[counters.clicks].Card_id)
+        console.log(time_stamp)
+        console.log(time_spend)
 
         let {dispatch} = this.props;
         dispatch(counterActions.increaseCounter())
