@@ -78,12 +78,12 @@ def insert_memories(request):
                     'User_id': request.POST.get('data[userId]'),
                     'Card_id': request.POST.get('data[cardId]'),
                     'Timestamp': Decimal(request.POST.get('data[timeStamp]')),
-                    'Timetaken': request.POST.get('data[timeSpend]'),
-                    'Correct': request.POST.get('data[correct]'),
+                    'Timetaken': Decimal(request.POST.get('data[timeSpend]')),
+                    'Correct': bool(request.POST.get('data[correct]')),
                 }
             )
             print('Added new memory.')
-
+            print(request.POST.get('data[userId]'),request.POST.get('data[cardId]'),Decimal(request.POST.get('data[timeStamp]')),Decimal(request.POST.get('data[timeSpend]')),bool(request.POST.get('data[correct]')))
         except KeyError:
             return HttpResponse('Upload memories failed!')
 

@@ -15,6 +15,12 @@ var senlin_offline_db = localforage.createInstance({
 var senlin_async_db = localforage.createInstance({
     name: "senlin_async"
 });
+var senlin_words = localforage.createInstance({
+    name: "senlin_words"
+});
+var senlin_review = localforage.createInstance({
+    name: "senlin_review"
+});
 
 
 const styles = {
@@ -54,34 +60,16 @@ export default class CardContainer extends React.Component {
         this.setState({timeSpend: countValue})
     }
     componentDidMount() {
-      let {dispatch, github} = this.props
-      if (!github.isLoadingRepos && github.repos === undefined) {
-        dispatch(githubActions.fetchRepos())
-      }
-    }
-
-
-
-    handleCorrect() {
-        let {counters, github} =  this.props
-        var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
-        var time_stamp = (Math.round(new Date()/10))/100
-        var time_spend = 20 - this.state.timeSpend
-        console.log(userid)
-        console.log(github.repos[counters.clicks].Card_id)
-        console.log(time_stamp)
-        console.log(time_spend)
-
-        var data = {
-            timeStamp: time_stamp,
-            timeSpend: time_spend,
-            userId: userid,
-            correct: true,
-            cardId: github.repos[counters.clicks].Card_id,
+        // after page loaded
+        let {dispatch, github} = this.props
+        if (!github.isLoadingRepos && github.repos === undefined) {
+            dispatch(githubActions.fetchRepos())
         }
+    }
+    
 
-
-        $.ajax({
+    ajax_sync_memory(data,time){
+         $.ajax({
             type: 'POST',
                 url: process.env.BASE_API_URL + 'api/new_memories/',
                 data: {
@@ -96,16 +84,74 @@ export default class CardContainer extends React.Component {
                 console.log('failed to register');
                 console.log('---> UPLOAD FAILED.')
                 //add to local async storage
+                senlin_async_db.setItem(time, {
+                    timeSpend: data['time_stamp'],
+                    userId: data['userId'],
+                    correct: data['correct'],
+                    cardId: data['cardId'],
+                }).then(function () {
+                  return localforage.getItem(time);
+                }).catch(function (err) {
+                  // we got an error
+                });
+
             })
             .always(function () {
                 // add to local memories storage
+                senlin_offline_db.setItem(time, {
+                    timeSpend: data['time_stamp'],
+                    userId: data['userId'],
+                    correct: data['correct'],
+                    cardId: data['cardId'],
+                }).then(function () {
+                  return localforage.getItem(time);
+                }).catch(function (err) {
+                  // we got an error
+                });
+
+
+                senlin_async_db.keys().then(function(Keys) {
+                    // Outputs the length of the database.
+                    console.log('#Aysnc: ', Keys);
+                }).catch(function(err) {
+                    // This code runs if there were any errors
+                    console.log(err);
+                });
+
+                senlin_offline_db.keys().then(function(Keys) {
+                    // Outputs the length of the database.
+                    console.log('#Offline: ', Keys);
+                }).catch(function(err) {
+                    // This code runs if there were any errors
+                    console.log(err);
+                });
 
 
 
             })  ;
 
+    }
 
 
+    handleCorrect() {
+        let {counters, github} =  this.props
+        var userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
+        var time_stamp = (Math.round(new Date()/10))/100
+        var time_spend = 20 - this.state.timeSpend
+        // console.log(userid)
+        // console.log(github.repos[counters.clicks].Card_id)
+        // console.log(time_stamp)
+        // console.log(time_spend)
+
+        var data = {
+            timeStamp: time_stamp,
+            timeSpend: time_spend,
+            userId: userid,
+            correct: true,
+            cardId: github.repos[counters.clicks].Card_id,
+        }
+        var time = String(time_stamp)
+        this.ajax_sync_memory(data,time)
 
 
         let {dispatch} = this.props;
@@ -115,13 +161,24 @@ export default class CardContainer extends React.Component {
 
     handleWrong(){
         let {counters, github} =  this.props
-        var userid = '6b6d136b-3b0c-453e-9631-4e3d37ef6872'
+        var userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
         var time_stamp= (Math.round(new Date()/10))/100
         var time_spend = 20 - this.state.timeSpend
-        console.log(userid)
-        console.log(github.repos[counters.clicks].Card_id)
-        console.log(time_stamp)
-        console.log(time_spend)
+        // console.log(userid)
+        // console.log(github.repos[counters.clicks].Card_id)
+        // console.log(time_stamp)
+        // console.log(time_spend)
+
+        var data = {
+            timeStamp: time_stamp,
+            timeSpend: time_spend,
+            userId: userid,
+            correct: false,
+            cardId: github.repos[counters.clicks].Card_id,
+        }
+
+        var time = String(time_stamp)
+        this.ajax_sync_memory(data,time)
 
         let {dispatch} = this.props;
         dispatch(counterActions.increaseCounter())
