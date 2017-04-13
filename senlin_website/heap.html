@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>Simple localForage example</title>
+  </head>
+  <body>
+    <script src="localforage.js"></script>
+    <script>
+		var store = localforage.createInstance({name: "heap"});
+
+		var counter = 1;
+
+		function objectToSortKey(obj) {
+			return obj.timestamp;
+		}
+
+		function addToHeap(objIn, callback) {
+			store.setItem(counter.toString(), objIn, function(err, value) {
+				counter++;
+				if(counter > 2) {
+					swapUp(counter-1, callback);
+				} else {
+					callback();
+				}
+			});
+		}
+
+		function swapUp(index, callback) {
+			console.log("swapUp(" + index + ")");
+			store.getItem(index.toString(), function(err, child) {
+				store.getItem(Math.floor(index/2).toString(), function(err, parnt) {
+					console.log("child: " + JSON.stringify(child) + " | parent: " + JSON.stringify(parnt));
+					if(objectToSortKey(child) < objectToSortKey(parnt)) {
+						store.setItem(index.toString(), parnt, function(err) {
+							store.setItem(Math.floor(index/2).toString(), child, function(err) {
+								if(Math.floor(index/2) !== 1) {
+									swapUp(Math.floor(index/2), callback);
+								} else {
+									callback();
+								}
+							});
+						});
+					} else {
+						callback();
+					}
+				});
+			});
+		}
+
+		function pop(callback) {
+			counter--;
+			store.getItem("1", function(err, val) {
+				store.getItem(counter.toString(), function(err, lastVal) {
+					store.removeItem(counter.toString(), function(err) {
+						store.setItem("1", lastVal, function(err) {
+							swapDown(1, function(){ callback(val); });
+						});
+					});
+				});
+			});
+		}
+
+		function swapDown(index, callback) {
+			console.log("swapDown(" + index + ")");
+			store.getItem(index.toString(), function(err, parnt) {
+				store.getItem((index*2).toString(), function(err, child1) {
+					store.getItem((index*2+1).toString(), function(err, child2) {
+
+						if(child1 == null && child2 == null) {
+							callback();
+							return;
+						} else if(child2 == null) {
+							minChild = child1;
+							minChildIndex = index*2;
+						} else if(objectToSortKey(child1) < objectToSortKey(child2)) {
+							minChild = child1;
+							minChildIndex = index*2;
+						} else {
+							minChild = child2;
+							minChildIndex = index*2+1;
+						}
+						
+						if(objectToSortKey(minChild) < objectToSortKey(parnt)) {
+							store.setItem(index.toString(), minChild, function(err) {
+								store.setItem(minChildIndex.toString(), parnt, function(err) {
+									swapDown(minChildIndex, callback);
+								});
+							});
+						} else {
+							callback();
+						}
+					});
+				});
+			});
+		};
+
+		store.clear(function() {
+			addToHeap({timestamp: 4, val: "hello"}, function() {
+				addToHeap({timestamp: 5, val: "world"}, function() {
+					addToHeap({timestamp: 3, val: "goodbye"}, function() {
+						addToHeap({timestamp: 2, val: "moon"}, function() {
+							store.iterate(function(value, key) { console.log(key + " -> " + JSON.stringify(value)); }, function() {
+								pop(function(val) {
+									console.log("Popped: " + JSON.stringify(val));
+									store.iterate(function(value, key) { console.log(key + " -> " + JSON.stringify(value)); });
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+
+		
+
+    </script>
+  </body>
+</html>
