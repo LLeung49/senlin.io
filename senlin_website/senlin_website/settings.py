@@ -34,11 +34,14 @@ WEBPACK_LOADER = {
     }
 }
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
     'senlin.apps.SenlinConfig',
     'webpack_loader',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

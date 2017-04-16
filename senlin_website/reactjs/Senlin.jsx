@@ -24,17 +24,20 @@ let reducer = combineReducers(reducers)
 let store = finalCreateStore(reducer)
 
 class Senlin extends React.Component {
+
+
   render() {
     return (
         <div>
             <NavBarContainer />
-            <CardContainer />
-
+            <Provider store={store}>
+                <CardContainer />
+            </Provider>
             <FooterContainer />
-        <Provider store={store}>
+        {/*<Provider store={store}>*/}
 
-            <App1Container />
-        </Provider>
+            {/*<App1Container />*/}
+        {/*</Provider>*/}
             </div>
     )
   }

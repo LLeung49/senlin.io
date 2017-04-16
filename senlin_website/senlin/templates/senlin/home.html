@@ -3,8 +3,42 @@
 
 {% block body %}
      <!--<h1>welcome to homepage</h1>-->
+
+
+
      <div id="Senlin"></div>
+     {% csrf_token %}
      {% render_bundle 'vendors' %}
      {% render_bundle 'Senlin' %}
 
+     <script type="text/javascript">
+
+
+          window.onload=function()
+            {
+//                saveStatusLocally()
+
+//               console.log(readStatus())
+                whatIsYourCurrentStatus()
+
+            }
+          // save the string
+          function saveStatusLocally() {
+            window.localStorage.setItem("status", 'Random notes');
+          }
+          // read the string
+          function readStatus() {
+             return window.localStorage.getItem("status");
+          }
+
+          function whatIsYourCurrentStatus() {
+            if (navigator.onLine) {
+              console.log('Online!')
+            } else {
+              console.log('Offline!')
+            }
+          }
+
+
+     </script>
 {% endblock %}

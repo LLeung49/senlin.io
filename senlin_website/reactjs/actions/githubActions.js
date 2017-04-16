@@ -7,7 +7,7 @@ export const FETCH_REPOS_ERROR500 = "FETCH_REPOS_ERROR500"
 export const FETCH_REPOS_FAILURE = "FETCH_REPOS_FAILURE"
 export function fetchRepos() {
   return function (dispatch) {
-    let url = "https://api.github.com/users/mbrochh/repos"
+    let url = "http://localhost:8000/senlin/api/words/"
     dispatch({type: FETCH_REPOS})
     return request(
       url, {},
