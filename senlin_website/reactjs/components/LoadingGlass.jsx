@@ -1,6 +1,6 @@
 import React from "react"
 
-export default class CountdownTimer extends React.Component{
+export default class LoadingGlass extends React.Component{
     // 定义属性
     static propTypes={
 
@@ -15,7 +15,7 @@ export default class CountdownTimer extends React.Component{
     //这里面的操作可以移动到componentWillMount()里面去
     constructor(...pa) {
         super(...pa);
-        this.initValue = this.props.value || 10;
+        this.initValue = this.props.value || 0;
         this.state     = {count: this.initValue}
         this.interval  = 0;
         this.step      = this.props.step || 1;
@@ -31,15 +31,12 @@ export default class CountdownTimer extends React.Component{
     start() {
         this.stop();
         this.interval = setInterval(()=> {
-            var count = this.state.count - this.step;
+            var count = this.state.count + this.step;
             if (this.props.onStep) {
                 this.props.onStep(count);
             }
             if (count < 0) {
                 this.props.onComplete && this.props.onComplete();
-                this.props.setTime(10)
-                this.props.nextCard(this);
-
                 this.stop();
             }else{
                 this.setState({count});
@@ -57,24 +54,21 @@ export default class CountdownTimer extends React.Component{
         this.start();
     }
     componentWillUnmount(){
-        this.props.setTime(this.state.count)
         this.stop();
     }
 
     render() {
         // return (<h2><span className="label label-danger">Time remaining: {this.state.count}</span></h2>)
-        if(this.state.count > 0 ){
-            return(
-            <h1><span className="badge red"><i className="fa fa-clock-o" aria-hidden="true"></i>  {this.state.count}</span></h1>
-        )
+        if(this.state.count%3 == 0){
+            return(<h1><i className="fa fa-hourglass-1" aria-hidden="true"></i></h1>)
+        }
+        else if(this.state.count%3 == 1){
+            return(<h1><i className="fa fa-hourglass-2" aria-hidden="true"></i></h1>)
         }
         else{
-            return(
-                <h1><span className="badge red">Time's up</span></h1>
-
-            )
+            return(<h1><i className="fa fa-hourglass-3" aria-hidden="true"></i></h1>)
         }
+
 
     }
 }
-
