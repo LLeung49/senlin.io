@@ -5,6 +5,7 @@ export const FETCH_REPOS_SUCCESS = "FETCH_REPOS_SUCCESS"
 export const FETCH_REPOS_ERROR400 = "FETCH_REPOS_ERROR400"
 export const FETCH_REPOS_ERROR500 = "FETCH_REPOS_ERROR500"
 export const FETCH_REPOS_FAILURE = "FETCH_REPOS_FAILURE"
+export const DELETE_CARD = "DELETE_CARD"
 export function fetchRepos() {
   return function (dispatch) {
     let url = "http://localhost:8000/senlin/api/words/"
@@ -17,4 +18,7 @@ export function fetchRepos() {
       (ex) => { dispatch({type: FETCH_REPOS_FAILURE, error: ex}) },
     )
   }
+}
+export function deleteCard(index){
+  return {type: DELETE_CARD, payload: index}
 }

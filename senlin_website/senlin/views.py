@@ -35,8 +35,8 @@ def home(request):
     # )
     # all_cards = response['Items']
     # print(all_cards)
-    data = [{'some': 'data'}]
-    jsondata = json.dumps(data)
+    # data = [{'some': 'data'}]
+    # jsondata = json.dumps(data)
     return render(request, 'senlin/home.html')
 
 
@@ -67,7 +67,7 @@ def words(request):
             print (now_timestamp)
 
 
-            daily_words_limit = 10
+            daily_words_limit = 20
             review_response = user_schedule_table.query(
                 FilterExpression=Attr('Intvl').lte(now_timestamp),
                 KeyConditionExpression=Key('User_id').eq(userid),

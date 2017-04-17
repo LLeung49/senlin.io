@@ -1,4 +1,6 @@
 import React from "react"
+import image from '../../senlin/static/img/senlinlogo.png'
+
 
 export default class FooterContainer extends React.Component {
   render() {
@@ -28,7 +30,7 @@ export default class FooterContainer extends React.Component {
 
                 <div className="footer-copyright">
                     <div className="container-fluid">
-                        © 2017 Copyright: <a href="https://Senlin.io"> Senlin.io </a>
+                        © 2017 Copyright: <a href="https://Senlin.io"> <img src={image} height={25}  mode='fit'/> Senlin.io </a>
 
                     </div>
                 </div>

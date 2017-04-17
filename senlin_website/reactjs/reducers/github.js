@@ -7,15 +7,19 @@ const initialState = {
 
 export default function github(state=initialState, action={}) {
   switch (action.type) {
-  case githubActions.FETCH_REPOS:
-    return {...state, isLoadingRepos: true}
-  case githubActions.FETCH_REPOS_SUCCESS:
-    return {...state, isLoadingRepos: false, repos: action.res}
-  case githubActions.FETCH_REPOS_ERROR400:
-  case githubActions.FETCH_REPOS_ERROR500:
-  case githubActions.FETCH_REPOS_FAILURE:
-    return {...state, isLoadingRepos: false}
-  default:
-    return state
+    case githubActions.FETCH_REPOS:
+      return {...state, isLoadingRepos: true}
+    case githubActions.FETCH_REPOS_SUCCESS:
+      return {...state, isLoadingRepos: false, repos: action.res}
+    case githubActions.FETCH_REPOS_ERROR400:
+    case githubActions.FETCH_REPOS_ERROR500:
+    case githubActions.FETCH_REPOS_FAILURE:
+      return {...state, isLoadingRepos: false}
+    case githubActions.DELETE_CARD:
+      var arr = state.repos;
+      arr.words.splice(action.payload,1);
+      return {...state, repos: arr}
+    default:
+      return state
   }
 }

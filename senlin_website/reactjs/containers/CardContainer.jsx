@@ -179,6 +179,7 @@ export default class CardContainer extends React.Component {
     handleCorrect() {
         console.log('Correct clicked!')
         let {counters, github} =  this.props
+
         var userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
         var time_stamp = (Math.round(new Date()/10))/100
         var time_spend = 10 - this.state.timeSpend
@@ -195,14 +196,28 @@ export default class CardContainer extends React.Component {
         this.ajax_sync_memory(data,time)
 
 
-        let {dispatch} = this.props;
-        dispatch(counterActions.increaseCounter())
+        if(counters.clicks + 1 >= github.repos.words.length){
+            let {dispatch} = this.props;
+            // this word don't show again, delete it from repos
+            dispatch(githubActions.deleteCard(counters.clicks))
+            dispatch(counterActions.increaseCounter(github.repos.words.length))
+        }
+        else{
+            let {dispatch} = this.props;
+            dispatch(githubActions.deleteCard(counters.clicks))
+        }
+
+
+
+        // dispatch(counterActions.increaseCounter(github.repos.words.length))
         this.nextCard()
     }
 
     handleWrong(){
         console.log('Wrong clicked!')
+
         let {counters, github} =  this.props
+
         var userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
         var time_stamp= (Math.round(new Date()/10))/100
         var time_spend = 10 - this.state.timeSpend
@@ -220,8 +235,9 @@ export default class CardContainer extends React.Component {
         var time = String(time_stamp)
         this.ajax_sync_memory(data,time)
 
+
         let {dispatch} = this.props;
-        dispatch(counterActions.increaseCounter())
+        dispatch(counterActions.increaseCounter(github.repos.words.length))
         this.nextCard()
     }
 
@@ -284,6 +300,7 @@ export default class CardContainer extends React.Component {
 
     renderWord() {
         let {counters, github} = this.props
+        console.log(counters.clicks , github.repos.words.length)
         var numOfWords = 0;
         senlin_words.length().then(function(numberOfKeys) {
             // Outputs the length of the database.
@@ -406,7 +423,7 @@ export default class CardContainer extends React.Component {
         if (github.isLoadingRepos || github.repos === undefined) {
           return this.renderLoading()
         }
-        if (counters.clicks >= Number(github.repos.words.length)){
+        if (github.repos.words.length == 0 || counters.clicks < 0){
             return this.renderFinish();
         }
         if (!this.state.start){

@@ -1,4 +1,8 @@
 export const INCREASE = "INCREASE"
-export function increaseCounter() {
-    return {type: INCREASE}
+export const DECREASE = "DECREASE"
+export function increaseCounter(length) {
+    return {type: INCREASE, payload: length}
+}
+export function decreaseCounter() {
+    return {type: DECREASE}
 }
