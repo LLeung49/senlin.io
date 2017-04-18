@@ -9,42 +9,69 @@ from rest_framework.views import APIView
 import json
 from django.http import Http404
 from decimal import Decimal
-
-
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.views import generic
+from django.views.generic import View
+from .forms import User
+from django.http import HttpResponseRedirect
+from django.template import RequestContext
+from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+from .forms import UserForm
 # Create your views here.
 
 
-# def home(request):
-    # return HttpResponse('<h1>fdasgssg</h1>')
 def home(request):
-    # # count #items in table
-    # dynamodb = boto3.resource('dynamodb')
-    # cards_table = dynamodb.Table('Cards')
-    # # users_table = dynamodb.Table('Users')
-    # # # get the users
-    # # response = users_table.scan(
-    # #     Select='SPECIFIC_ATTRIBUTES',
-    # #     AttributesToGet=['User_id'],
-    # # )
-    # # user_id = response['Items'][0]['User_id']
-    # # scan all to get all item
-    # response = cards_table.scan(
-    #     Select='SPECIFIC_ATTRIBUTES',
-    #     AttributesToGet=['Back', 'Front', 'Pronunciation']
-    # )
-    # all_cards = response['Items']
-    # print(all_cards)
-    # data = [{'some': 'data'}]
-    # jsondata = json.dumps(data)
     return render(request, 'senlin/home.html')
 
 
-# class words(APIView):
-#     def get(self, request):
-#         return Response([{'some': 'data'}])
-#     def post(self):
-#         pass
+class UserFormView(View):
+    template_name = 'senlin/login.html'
+    form_class = UserForm
+
+    def get(self, request):
+        logout(request)
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        logout(request)
+        num_fields = len(request.POST)
+        print(num_fields)
+        notification = ''
+        if num_fields == 6:
+            form = self.form_class(request.POST)
+            if form.is_valid():
+
+                user = form.save(commit=False)
+                # cleaned data
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                user.set_password(password)
+                user.save()
+                # check if user register successfully
+                if User.objects.get(username=username):
+                    notification = "Thanks for join us."
+                else:
+                    notification = "Registration is declined."
+            else:
+                notification = "Form is not valid."
+            return render(request, 'senlin/message.html', {'message': notification})
+        elif num_fields == 3:
+            username = request.POST['username']
+            password = request.POST['password']
+            # return user object if credentials are correct
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    # return render_to_response('main/task.html', {'user': user}, RequestContext(request))
+                    return HttpResponseRedirect(reverse('senlin:home'))
+        return render(request, self.template_name)
+        # return HttpResponseRedirect(reverse('main:task'))
 
 
 def words(request):
@@ -67,7 +94,7 @@ def words(request):
             print (now_timestamp)
 
 
-            daily_words_limit = 20
+            daily_words_limit = 5
             review_response = user_schedule_table.query(
                 FilterExpression=Attr('Intvl').lte(now_timestamp),
                 KeyConditionExpression=Key('User_id').eq(userid),

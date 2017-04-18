@@ -255,7 +255,6 @@ export default class CardContainer extends React.Component {
                             <div className="mask"></div>
                         </a>
                     </div>
-                    <hr className="extra-margins"/>
                     <div className="card-block text-center">
                         <LoadingGlass/>
                         <h4 className="card-title" style={{fontSize: '30px'}}>Loading...</h4>
@@ -283,7 +282,6 @@ export default class CardContainer extends React.Component {
                             <div className="mask"></div>
                         </a>
                     </div>
-                    <hr className="extra-margins"/>
                     <div className="card-block text-center" >
                         <h4 className="card-title" style={{fontSize: '30px'}}><i className="fa fa-trophy" aria-hidden="true"></i>  You finish today's quota.</h4>
                         <a className="btn btn-secondary btn-lg waves-effect waves-light" onClick={() => this.reload()} style={[styles.cardButton]} >Continue   <i className="fa fa-undo" aria-hidden="true"></i></a>
@@ -327,7 +325,6 @@ export default class CardContainer extends React.Component {
                             <div className="mask"></div>
                         </a>
                     </div>
-                    <hr className="extra-margins"/>
                     <div className="card-block text-center">
                         <CountdownTimer  secondsRemaining="10" nextCard = {this.showDetails} setTime = {this.setTimeSpend.bind(this)}/>
                         <h4 className="card-title" style={{fontSize: '30px'}}><i className="fa fa-microphone" aria-hidden="true"></i>   {github.repos.words[counters.clicks].Pronunciation}</h4>
@@ -364,7 +361,6 @@ export default class CardContainer extends React.Component {
                             <div className="mask"></div>
                         </a>
                     </div>
-                    <hr className="extra-margins"/>
                     <div className="card-block text-center">
                         <h4><span className="badge indigo"><i className="fa fa-history" aria-hidden="true"></i>   回想用时 {10 - this.state.timeSpend} 秒.</span></h4>
                         <h4 className="card-title" style={{fontSize: '30px'}}><i className="fa fa-microphone" aria-hidden="true"></i>  {github.repos.words[counters.clicks].Pronunciation}</h4>
@@ -400,7 +396,6 @@ export default class CardContainer extends React.Component {
                             <div className="mask"></div>
                         </a>
                     </div>
-                    <hr className="extra-margins"/>
                     <div className="card-block text-center align-center" style={[styles.inner]} >
 
                             <h3>今日单词: {github.repos.words.length}</h3>

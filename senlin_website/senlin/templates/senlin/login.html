@@ -6,7 +6,7 @@
       {% load staticfiles %}
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
 
-
+    <link rel="icon" href="{% static 'img/senlinlogo.png' %}"/>
       <link href="{% static 'css/normalize.css' %}" type="text/css" rel="stylesheet"/>
       <link href="{% static 'css/login.css' %}" type="text/css" rel="stylesheet"/>
 
@@ -26,9 +26,9 @@
       
       <div class="tab-content">
         <div id="signup">   
-          <h1>Sign Up to Rivulet</h1>
+          <h1>Sign Up to Senlin</h1>
           
-          <form action="/login/register/" method="post" id="sign_up_form" name="sign_up_form">
+          <form action="" method="post" id="sign_up_form" name="sign_up_form">
               {% csrf_token %}
               <div class="top-row">
                 <div class="field-wrap">
