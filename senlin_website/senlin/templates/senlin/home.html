@@ -4,23 +4,17 @@
 {% block body %}
      <!--<h1>welcome to homepage</h1>-->
 
-
-
-     <div id="Senlin"></div>
-     {% csrf_token %}
-     {% render_bundle 'vendors' %}
-     {% render_bundle 'Senlin' %}
-
      <script type="text/javascript">
 
+          var user_name = '{{ user.username}}'
+          var numOfWords = '{{ numOfWords }}'
+          console.log('======',numOfWords)
 
           window.onload=function()
             {
 //                saveStatusLocally()
-
 //               console.log(readStatus())
                 whatIsYourCurrentStatus()
-
             }
           // save the string
           function saveStatusLocally() {
@@ -41,4 +35,11 @@
 
 
      </script>
+
+     <div id="Senlin" ></div>
+     {% csrf_token %}
+     {% render_bundle 'vendors' %}
+     {% render_bundle 'Senlin' %}
+
+
 {% endblock %}

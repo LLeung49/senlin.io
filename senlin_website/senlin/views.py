@@ -21,11 +21,19 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from .forms import UserForm
+
 # Create your views here.
 
 
 def home(request):
-    return render(request, 'senlin/home.html')
+
+    if request.method == 'GET' and request.user.is_authenticated():
+        numOfWords = int(request.GET.get('numOfWords', 0))
+        print(request.user.username,numOfWords)
+        return render(request, 'senlin/home.html', {'numOfWords': numOfWords})
+    else:
+        notification = "Please log in first."
+        return render(request, 'senlin/message.html', {'message': notification})
 
 
 class UserFormView(View):
@@ -70,13 +78,15 @@ class UserFormView(View):
                     login(request, user)
                     # return render_to_response('main/task.html', {'user': user}, RequestContext(request))
                     return HttpResponseRedirect(reverse('senlin:home'))
-        return render(request, self.template_name)
+            notification = "Login attempt is declined."
+            return render(request, 'senlin/message.html', {'message': notification})
         # return HttpResponseRedirect(reverse('main:task'))
 
 
 def words(request):
+    print "Receive fetch action from: ", request.GET.get('username'), request.GET.get('num')
     if request.method == 'GET':
-        userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
+        userid = str(request.GET.get('username'))
         try:
             dynamodb = boto3.resource('dynamodb')
             cards_table = dynamodb.Table('Cards')
@@ -94,7 +104,7 @@ def words(request):
             print (now_timestamp)
 
 
-            daily_words_limit = 5
+            daily_words_limit = int(request.GET.get('num'))
             review_response = user_schedule_table.query(
                 FilterExpression=Attr('Intvl').lte(now_timestamp),
                 KeyConditionExpression=Key('User_id').eq(userid),
@@ -160,11 +170,16 @@ def words(request):
         jsondata = json.dumps(stats)
         return HttpResponse(jsondata, content_type="application/json")
     else:
-        pass
+        stats = {
+            'msg': "Not log in",
+
+        }
+        jsondata = json.dumps(stats)
+        return HttpResponse(jsondata, content_type="application/json")
 
 
 def insert_memories(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated():
         dynamodb = boto3.resource('dynamodb')
         memories_table = dynamodb.Table('Memories')
         answer = False
@@ -189,4 +204,5 @@ def insert_memories(request):
 
         return HttpResponse('Upload memories successfully!')
     else:
-        pass
+        notification = "Please log in first."
+        return render(request, 'senlin/message.html', {'message': notification})

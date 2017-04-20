@@ -59,13 +59,13 @@ export default class CardContainer extends React.Component {
         console.log('Component DID MOUNT!')
         let {dispatch, github} = this.props
         if (!github.isLoadingRepos && github.repos === undefined) {
-            dispatch(githubActions.fetchRepos())
+            dispatch(githubActions.fetchRepos(this.props.user_name,this.props.numOfWords))
             console.log('Fetching words.....')
         }
 
     }
     componentWillMount() {
-        console.log('Component WILL MOUNT!')
+        console.log('Component WILL MOUNT!');
 
     }
 
@@ -180,7 +180,7 @@ export default class CardContainer extends React.Component {
         console.log('Correct clicked!')
         let {counters, github} =  this.props
 
-        var userid = '64b93d2e-138f-45f6-a118-66968cd62b20'
+        var userid = this.props.user_name
         var time_stamp = (Math.round(new Date()/10))/100
         var time_spend = 10 - this.state.timeSpend
 
@@ -284,7 +284,7 @@ export default class CardContainer extends React.Component {
                     </div>
                     <div className="card-block text-center" >
                         <h4 className="card-title" style={{fontSize: '30px'}}><i className="fa fa-trophy" aria-hidden="true"></i>  You finish today's quota.</h4>
-                        <a className="btn btn-secondary btn-lg waves-effect waves-light" onClick={() => this.reload()} style={[styles.cardButton]} >Continue   <i className="fa fa-undo" aria-hidden="true"></i></a>
+                        <a className="btn btn-secondary btn-lg waves-effect waves-light" onClick={() => this.reload()} style={[styles.cardButton]} >再来一组   <i className="fa fa-undo" aria-hidden="true"></i></a>
 
                         <p className="card-text" style={{fontSize: '20px'}}></p>
                     </div>
@@ -380,6 +380,7 @@ export default class CardContainer extends React.Component {
     }
     renderHome(){
         console.log('Rendering Home....')
+
         let {counters, github} = this.props
       if (github.isLoadingRepos || github.repos === undefined) {
         return this.renderLoading()
@@ -414,6 +415,7 @@ export default class CardContainer extends React.Component {
     }
 
     render () {
+        console.log('this is card saying:', this.props.user_name,this.props.numOfWords)
         let {counters,github} = this.props
         if (github.isLoadingRepos || github.repos === undefined) {
           return this.renderLoading()
