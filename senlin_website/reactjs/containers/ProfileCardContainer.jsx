@@ -13,7 +13,7 @@ const styles = {
     borderRadius: '25px',
       fontWeight:400,
       color: 'white',
-      backgroundColor: '#c51162',
+      backgroundColor: '#198027',
     },
     chip_info: {
     display: 'inline-block',
@@ -24,7 +24,7 @@ const styles = {
     borderRadius: '25px',
       fontWeight:400,
       color: 'white',
-      backgroundColor: '#44c767',
+      backgroundColor: '#198027',
     },
     chip_start: {
     display: 'inline-block',
@@ -35,7 +35,7 @@ const styles = {
     borderRadius: '25px',
       fontWeight:400,
       color: 'white',
-      backgroundColor: '#33b5e5',
+      backgroundColor: '#198027',
     },
 
     chipimg :{
@@ -80,8 +80,7 @@ export default class CardContainer extends React.Component {
 
     static propTypes={
 
-        set_start:React.PropTypes.func,
-
+        set_showLearned:React.PropTypes.func,
     }
 
     constructor(props, context) {
@@ -90,6 +89,9 @@ export default class CardContainer extends React.Component {
 
 
     };
+    show_learned(){
+        this.props.set_showLearned(this)
+    }
 
 
     render () {
@@ -111,8 +113,10 @@ export default class CardContainer extends React.Component {
                                     </a>
                                 </div>
                                 <div className="card-block text-center">
-                                    <h4 className="card-title" style={{fontSize: '30px'}}>/put user profile and stats here/</h4>
-                                    <a href="#" className="button button-rounded button-flat"><i className="fa fa-edit"></i> 编辑</a>
+                                    <h4 className="card-title" style={{fontSize: '30px'}}>所有单词: {this.props.totalNumOfWords}</h4>
+                                    <h4 className="card-title" style={{fontSize: '30px'}}>已学单词: {this.props.numOfLearned}</h4>
+                                    <h4 className="card-title" style={{fontSize: '30px'}}>需要复习: {this.props.numOfReview}</h4>
+                                    {/*<a href="#" className="button button-rounded button-flat"><i className="fa fa-edit"></i> 编辑</a>*/}
                                 </div>
                             </div>
                         </div>
@@ -129,8 +133,7 @@ export default class CardContainer extends React.Component {
                                 </div>
                                 <div className="card-block text-center">
                                     <h4 className="card-title" style={{fontSize: '30px'}}>/put user's tags here/</h4>
-                                    <a href="#" className="button button-rounded button-flat-action"><i className="fa fa-map-o"></i> 查看所有单词</a>
-
+                                        <button onClick={this.props.set_showLearned} name="showLearnedButton" className="button button-rounded button-flat-action"><i className="fa fa-map-o"></i> 查看已学单词</button>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +156,7 @@ export default class CardContainer extends React.Component {
                                             <input name="numOfWords" defaultValue='50' type="number" min="10" max="100"
                                             id="form6" className="form-control" required/>
                                             <label className="active">how many words? (between 10 and 100)</label>
-                                            <button type="submit"  className="button button-rounded button-flat-primary"><i className="fa fa-hand-pointer-o"></i> 开始学习</button>
+                                            <button type="submit"  className="button button-rounded button-flat-action"><i className="fa fa-hand-pointer-o"></i> 开始学习</button>
                                                 </form>
                                         </div>
 

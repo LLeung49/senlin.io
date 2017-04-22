@@ -66,6 +66,7 @@ export default class CardContainer extends React.Component {
     }
     componentWillMount() {
         console.log('Component WILL MOUNT!');
+        console.log(this.props.user_name, this.props.numOfWords)
 
     }
 
@@ -249,8 +250,8 @@ export default class CardContainer extends React.Component {
             <div className="container">
                 <div className="card z-depth-2"  style={{height: 600, position: 'relative'}}>
                     <div className="card-block text-center">
-                        <h1 style={{fontSize: '120px'}}>Welcome</h1>
-
+                        {/*<h1 style={{fontSize: '120px'}}>Welcome</h1>*/}
+                        {/*<div className="loader"></div>*/}
                         <a>
                             <div className="mask"></div>
                         </a>
@@ -415,7 +416,6 @@ export default class CardContainer extends React.Component {
     }
 
     render () {
-        console.log('this is card saying:', this.props.user_name,this.props.numOfWords)
         let {counters,github} = this.props
         if (github.isLoadingRepos || github.repos === undefined) {
           return this.renderLoading()

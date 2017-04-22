@@ -12,7 +12,7 @@ const styles = {
     fontSize: '16px',
     lineHeight: '50px',
     borderRadius: '25px',
-    backgroundColor: '#aa66cc',
+    backgroundColor: '#198027',
       fontWeight:400
     },
 
@@ -58,13 +58,14 @@ export default class NavBarContainer extends React.Component {
                 <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <a className="navbar-brand" href="#">
+                <a className="navbar-brand" href={process.env.BASE_API_URL}>
                      <img src={image} height={50} />
                 </a>
                 {/*<div className="collapse navbar-collapse" id="navbarNav1">*/}
+
                     {/*<ul className="navbar-nav mr-auto">*/}
                         {/*<li className="nav-item active">*/}
-                            {/*/!*<a className="nav-link">Home<span className="sr-only">(current)</span></a>*!/*/}
+                            {/*<a className="nav-link">Home</a>*/}
                         {/*</li>*/}
 
 
@@ -94,7 +95,7 @@ export default class NavBarContainer extends React.Component {
                                         </div>
                                     </a>
                                     <div className="dropdown-menu dropdown" aria-labelledby="dropdownMenu1">
-                                        <a className="dropdown-item" href="http://localhost:8000/senlin/register">登出</a>
+                                        <a className="dropdown-item" href={process.env.BASE_API_URL + 'register'}>登出</a>
                                     </div>
                                 </li>
 

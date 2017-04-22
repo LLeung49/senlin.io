@@ -28,9 +28,26 @@ from .forms import UserForm
 def home(request):
 
     if request.method == 'GET' and request.user.is_authenticated():
+        dynamodb = boto3.resource('dynamodb')
+        user_schedule_table = dynamodb.Table('UserWordList')
+        cards_table = dynamodb.Table('Cards')
+        now_timestamp = int(time.time() / 86400)
+        review_response = user_schedule_table.query(
+            FilterExpression=Attr('Intvl').lte(now_timestamp),
+            KeyConditionExpression=Key('User_id').eq(request.user.username),
+        )
+        total_reviews_response = user_schedule_table.query(
+            KeyConditionExpression=Key('User_id').eq(request.user.username),
+        )
+        print review_response['Count']
+
         numOfWords = int(request.GET.get('numOfWords', 0))
-        print(request.user.username,numOfWords)
-        return render(request, 'senlin/home.html', {'numOfWords': numOfWords})
+        print 'Receive request from '+ request.user.username + '\nNum of words: ' + str(numOfWords)
+        return render(request, 'senlin/home.html', {'numOfWords': numOfWords,
+                                                    'numOfLearned': total_reviews_response['Count'],
+                                                    'totalNumOfWords': cards_table.item_count,
+                                                    'numOfReview': review_response['Count']
+                                                    })
     else:
         notification = "Please log in first."
         return render(request, 'senlin/message.html', {'message': notification})
@@ -63,6 +80,24 @@ class UserFormView(View):
                 # check if user register successfully
                 if User.objects.get(username=username):
                     notification = "Thanks for join us."
+
+                    dynamodb = boto3.resource('dynamodb')
+                    user_table = dynamodb.Table('Users')
+                    try:
+                        # print(request.POST.get('data[cardId]'))
+                        user_table.put_item(
+                            Item={
+                                'User_id': form.cleaned_data['username'],
+                                'Email': form.cleaned_data['email'],
+                                'FirstName':form.cleaned_data['first_name'],
+                                'LastName': form.cleaned_data['last_name']
+                            }
+                        )
+                        print('Added new user.')
+
+                    except KeyError:
+                        return HttpResponse('Upload user\'s info failed!')
+
                 else:
                     notification = "Registration is declined."
             else:
@@ -88,10 +123,10 @@ def words(request):
     if request.method == 'GET':
         userid = str(request.GET.get('username'))
         try:
+            daily_words_limit = int(request.GET.get('num'))
             dynamodb = boto3.resource('dynamodb')
             cards_table = dynamodb.Table('Cards')
             user_schedule_table = dynamodb.Table('UserWordList')
-
             # Fetch all cards
             cards_response = cards_table.scan()
 
@@ -99,69 +134,92 @@ def words(request):
             cards_dict = {}
             for item in cards_response['Items']:
                 cards_dict[item['Card_id']] = item
-            # fetch all revison schedule which timestamp is less than this moment next day
-            now_timestamp = int(time.time()/86400)
-            print (now_timestamp)
+
+            if daily_words_limit == 0:
+                # get the users
+                viewed_response = user_schedule_table.query(
+                    KeyConditionExpression=Key('User_id').eq(userid)
+                )
+                revision_dict = {}
+                current_return_list = []
+                for item in viewed_response['Items']:
+                    revision_dict[item['Card_id']] = item['LastViewd']
+                for item in sorted(revision_dict.items(), key=lambda k: k[1]):
+
+                    # date = datetime.datetime.fromtimestamp((item[1]-1)*86400)
+                    date = time.strftime('%Y-%m-%d ', time.localtime((item[1]-1)*86400))
+                    a = cards_dict.pop(item[0])
+                    b = {'LastViewed': date}
+                    a.update(b)
+                    current_return_list.append(a)
+                    print a
+                stats = {
+                    'words': current_return_list
+                }
+
+            else:
+
+                # fetch all revison schedule which timestamp is less than this moment next day
+                now_timestamp = int(time.time()/86400)
+                print (now_timestamp)
+
+                review_response = user_schedule_table.query(
+                    FilterExpression=Attr('Intvl').lte(now_timestamp),
+                    KeyConditionExpression=Key('User_id').eq(userid),
+                )
+                future_learning_response = user_schedule_table.query(
+                    FilterExpression=Attr('Intvl').gt(now_timestamp),
+                    KeyConditionExpression=Key('User_id').eq(userid),
+                )
+
+                # print(review_response['Items'])
+                current_learning_list = []
+                # convert the review_response['Item'] to dictionary in order to sort
+                revision_dict = {}
+                for item in review_response['Items']:
+                    revision_dict[item['Card_id']] = item['Intvl']
+                count = 0
+                for item in sorted(revision_dict.items(), key=lambda k: k[1]):
+                    if count < daily_words_limit:
+                        print'Sorted:', item
+                        current_learning_list.append(cards_dict.pop(item[0]))
+                        count += 1
+                    else:
+                        cards_dict.pop(item[0])
 
 
-            daily_words_limit = int(request.GET.get('num'))
-            review_response = user_schedule_table.query(
-                FilterExpression=Attr('Intvl').lte(now_timestamp),
-                KeyConditionExpression=Key('User_id').eq(userid),
-            )
-            future_learning_response = user_schedule_table.query(
-                FilterExpression=Attr('Intvl').gt(now_timestamp),
-                KeyConditionExpression=Key('User_id').eq(userid),
-            )
+                # get the details of the words which need to be reviewed and delete it in the cards dict
+                # for item in review_response['Items']:
+                #     # print(item['Card_id'])
+                #     current_learning_list.append(cards_dict.pop(item['Card_id']))
+                num_of_scheduled_words = len(current_learning_list)
+                print('# of words need to review: ', num_of_scheduled_words)
+                num_of_viewed_words = len(review_response['Items']) + len(future_learning_response['Items'])
+                print('# of words reviewed words: ', num_of_viewed_words)
 
-            # print(review_response['Items'])
-            current_learning_list = []
-            # convert the review_response['Item'] to dictionary in order to sort
-            revision_dict = {}
-            for item in review_response['Items']:
-                revision_dict[item['Card_id']] = item['Intvl']
-            count = 0
-            for item in sorted(revision_dict.items(), key=lambda k: k[1]):
-                if count < daily_words_limit:
-                    print('Sorted:', item)
-                    current_learning_list.append(cards_dict.pop(item[0]))
-                    count += 1
-                else:
-                    cards_dict.pop(item[0])
+                # delete the cards which do not to be reviewed
+                for item in future_learning_response['Items']:
+                    cards_dict.pop(item['Card_id'])
+                num_of_new_words = len(cards_dict.keys())
+                print('# of new words: ', num_of_new_words)
 
+                # grab new words if # of words need to be reviewed is less than daily new words limit
 
-            # get the details of the words which need to be reviewed and delete it in the cards dict
-            # for item in review_response['Items']:
-            #     # print(item['Card_id'])
-            #     current_learning_list.append(cards_dict.pop(item['Card_id']))
-            num_of_scheduled_words = len(current_learning_list)
-            print('# of words need to review: ', num_of_scheduled_words)
-            num_of_viewed_words = len(review_response['Items']) + len(future_learning_response['Items'])
-            print('# of words reviewed words: ', num_of_viewed_words)
+                if len(current_learning_list) < daily_words_limit:
+                    for i in range(daily_words_limit - len(current_learning_list)):
+                        current_learning_list.append(cards_dict.popitem()[1])
+                print('# of words generated for user: ', len(current_learning_list))
 
-            # delete the cards which do not to be reviewed
-            for item in future_learning_response['Items']:
-                cards_dict.pop(item['Card_id'])
-            num_of_new_words = len(cards_dict.keys())
-            print('# of new words: ', num_of_new_words)
-
-            # grab new words if # of words need to be reviewed is less than daily new words limit
-
-            if len(current_learning_list) < daily_words_limit:
-                for i in range(daily_words_limit - len(current_learning_list)):
-                    current_learning_list.append(cards_dict.popitem()[1])
-            print('# of words generated for user: ', len(current_learning_list))
-
-            # for item in current_learning_list:
-            #     print(item['Front'])
-            # print(current_learning_list)
+                # for item in current_learning_list:
+                #     print(item['Front'])
+                # print(current_learning_list)
 
 
-            stats = {
-                'numOfScheduledWords': num_of_scheduled_words,
-                'numOfNewWords': num_of_new_words,
-                'words': current_learning_list
-            }
+                stats = {
+                    'numOfScheduledWords': num_of_scheduled_words,
+                    'numOfNewWords': num_of_new_words,
+                    'words': current_learning_list
+                }
         except KeyError:
             return HttpResponse('Fetch Words Error!')  # incorrect post
 
